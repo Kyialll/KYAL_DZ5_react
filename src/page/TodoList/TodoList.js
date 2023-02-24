@@ -5,64 +5,111 @@ import classes  from "../TodoList/TodoList.module.css"
 import Modal from "../../components/Modal/Modal";
 import List from "../../components/List/List";
 
+
+
+
 const TodoList=()=>{
     const [ isShow, setIsShow ] = useState(false);
-    const [ newTask, setNewTask ] = useState('Пусто');
-    const [add,setAdd]=useState('')
+    const [ newTitle, setNewTitle ] = useState('');
     const[search,setSearch]=useState('')
-    // console.log(search)
-    // console.log(add)
 
-    const handleShow = () => {
-        setIsShow(!isShow);
-        setAdd('')
-        setSearch('')
-        setNewTask('Пусто')
-    };
-    const handleChangeText = (text) => {
-        setNewTask(text);
-        setAdd(text)
-    }
 
-    const todos=[ {
-        task: 'coding',
+    const [list,setList]=useState([ {
+        title: 'coding',
         id:1 ,
+        completed:false,
 
     },
         {
-            task: 'homework',
+            title: 'homework',
             id:2,
+            completed:false,
 
         },
         {
-            task:'read',
+            title:'read',
             id:3,
+            completed:false,
 
         },
         {
-            task: 'sleep',
+            title: 'sleep',
             id:4,
+            completed:false,
 
-        },]
+        },
+        {
+            title: 'cook',
+            id:5,
+            completed:false,
+
+        }
+        ])
+    const handleShow = () => {
+        setIsShow(!isShow);
+        setSearch('')
+        setNewTitle('')
+    };
+    const handleAdd=()=>{
+        setList((prevTodo)=>{
+            return [...prevTodo,{id:list.length +1,title:newTitle,completed:false}]
+        })
+        handleShow()
+
+
+    }
+
+    const handleDone = (id) => {
+        const currentIndex = list.findIndex((todo) => todo.id === id);
+        list[currentIndex].completed = !list[currentIndex].completed;
+        setList([...list]);
+    }
+    const handleChangeText = (event) => {
+        setNewTitle(event.target.value);
+        // setAdd(event.target.value)
+    }
+    const handeSearch=(event)=>{
+        setSearch(event.target.value)
+    }
+    const handleDelete = (id) =>
+    {
+        let newList = list.filter(todo => todo.id !== id)
+        setList(newList)
+    }
+
     return (
         <div className={classes.wrapper}>
-            <Button handleShow={handleShow}>
+            <Button onClick={handleShow}>
                 Добавить
             </Button>
-            <List todos={todos}/>
+            <Input
+            type={'text'}
+                placeholder={'Search...'}
+            onChange={handeSearch}
+            name={'search'}
+            value={search}
+            />
+
             { isShow && <Modal handleShow={handleShow}>
-                <p>{newTask}</p>
-                <input type="text" onChange={(event) =>  handleChangeText(event.target.value) } className={classes.input} />
-                <p>{add}</p>
-                <Button>
+                <p>{newTitle}</p>
+                <Input
+                 type={'text'}
+                placeholder={"Add new task"}
+                onChange={handleChangeText}
+                name={'add'}
+                value={newTitle}/>
+                <Button onClick={handleAdd}>
                     Добавить
                 </Button>
-                <input type="text" onChange={(event)=>{setSearch(event.target.value)}}/>
+
+
                 <p>{search}</p>
-                <button  className={classes.button}>Close</button>
+                <button  className={classes.button} onClick={handleShow}>Close</button>
             </Modal> }
+            <List list={list} handleDone={handleDone} search={search} handleDelete={handleDelete}/>
 
         </div>
+
     )
 }
 

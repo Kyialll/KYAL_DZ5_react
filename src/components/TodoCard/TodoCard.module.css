@@ -1,0 +1,38 @@
+.todoCard {
+    width: 600px;
+    height: 80px;
+    background-color: #ffff;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 4px 4px 20px rgba(185, 186, 185, 0.75);
+    padding-left: 25px;
+    padding-right: 30px;
+
+}
+.wrapperTodoCard{
+    display: flex;
+    justify-content:end;
+    align-items: center;
+}
+
+.done{
+    width: 600px;
+    height: 80px;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 4px 4px 20px rgba(185, 186, 185, 0.75);
+    padding-left: 20px;
+    text-decoration: line-through;
+    background-color: lightgreen;
+
+}
+.checkbox{
+    width: 30px;
+    height: 30px;
+}
