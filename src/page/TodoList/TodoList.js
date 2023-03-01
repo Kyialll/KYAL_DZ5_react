@@ -8,10 +8,13 @@ import List from "../../components/List/List";
 
 
 
+
 const TodoList=()=>{
     const [ isShow, setIsShow ] = useState(false);
     const [ newTitle, setNewTitle ] = useState('');
-    const[search,setSearch]=useState('')
+    const[search,setSearch]=useState('');
+    const [currentEdit,setCurrentEdit]=useState('');
+
 
 
     const [list,setList]=useState([ {
@@ -45,6 +48,13 @@ const TodoList=()=>{
 
         }
         ])
+    localStorage.setItem('list', JSON.stringify(list));
+
+    const storedList = JSON.parse(localStorage.getItem('list'));
+    console.log(storedList)
+
+
+
     const handleShow = () => {
         setIsShow(!isShow);
         setSearch('')
@@ -71,11 +81,39 @@ const TodoList=()=>{
     const handeSearch=(event)=>{
         setSearch(event.target.value)
     }
+    console.log(list)
     const handleDelete = (id) =>
     {
         let newList = list.filter(todo => todo.id !== id)
         setList(newList)
     }
+
+    const handleEdit=(editTodo)=>{
+        const editList=list.map(todo=>{
+            if (editTodo.id===todo.id){
+                return{...todo,title:editTodo.title}
+            }
+            return todo
+        })
+        setList([...editList]);
+        setCurrentEdit()
+    }
+    // const handleCancel=(cancelTodo)=>{
+    //     const cancelList=list.map(todo=>{
+    //         if (cancelTodo.id===todo.id){
+    //             return{...todo,title:cancelTodo.title}
+    //         }
+    //         return todo
+    //     })
+    //     setList([...cancelList]);
+    //
+    //
+    // }
+
+
+
+
+
 
     return (
         <div className={classes.wrapper}>
@@ -84,11 +122,13 @@ const TodoList=()=>{
             </Button>
             <Input
             type={'text'}
-                placeholder={'Search...'}
+            placeholder={'Search...'}
             onChange={handeSearch}
             name={'search'}
             value={search}
             />
+
+
 
             { isShow && <Modal handleShow={handleShow}>
                 <p>{newTitle}</p>
@@ -106,7 +146,18 @@ const TodoList=()=>{
                 <p>{search}</p>
                 <button  className={classes.button} onClick={handleShow}>Close</button>
             </Modal> }
-            <List list={list} handleDone={handleDone} search={search} handleDelete={handleDelete}/>
+            <List list={list}
+                  handleDone={handleDone}
+                  search={search}
+                  handleDelete={handleDelete}
+                  currentEdit={currentEdit}
+                  handleChangeCurrent={setCurrentEdit}
+                  handleEdit={handleEdit}
+
+
+
+
+            />
 
         </div>
 

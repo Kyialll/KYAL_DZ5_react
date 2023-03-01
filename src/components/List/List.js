@@ -3,7 +3,7 @@ import TodoCard from "../TodoCard/TodoCard";
 
 
 
-const List=({list,handleDone,search,handleDelete})=>{
+const List=({list,handleDone,search,handleDelete,currentEdit,handleChangeCurrent,handleEdit,handleCancel})=>{
     return(
         <div >
             <div >
@@ -13,7 +13,14 @@ const List=({list,handleDone,search,handleDelete})=>{
                         key={todo.id}
                         todo={todo}
                         handleDone={handleDone}
-                        handleDelete={handleDelete}/>)}
+                        handleDelete={handleDelete}
+                        currentEdit={todo.id===currentEdit}
+                        handleChangeCurrent={handleChangeCurrent}
+                        handleEdit={handleEdit}
+                        handleCancel={handleCancel}
+
+
+                    />)}
             </div>
 
         </div>
