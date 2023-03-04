@@ -4,8 +4,11 @@ const Modal = ({ children, handleShow }) => {
         <>
             <div onClick={handleShow} className={classes.modalWrapper}></div>
             <div className={classes.modalContent}>
+                <button className={classes.button} onClick={handleShow} >x</button>
                 {children}
+
             </div>
+
         </>
     )
 }

@@ -1,9 +1,7 @@
 
 import TodoCard from "../TodoCard/TodoCard";
 
-
-
-const List=({list,handleDone,search,handleDelete,currentEdit,handleChangeCurrent,handleEdit,handleCancel})=>{
+const List=({list, handleDone,search,handleDelete,currentEdit,handleChangeCurrent,handleEdit,handleCancel})=>{
     return(
         <div >
             <div >
@@ -18,6 +16,7 @@ const List=({list,handleDone,search,handleDelete,currentEdit,handleChangeCurrent
                         handleChangeCurrent={handleChangeCurrent}
                         handleEdit={handleEdit}
                         handleCancel={handleCancel}
+
 
 
                     />)}

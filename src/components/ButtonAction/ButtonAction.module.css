@@ -1,0 +1,26 @@
+.actionButton {
+    width: 90px;
+    height: 28px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    border: none;
+    font-weight: bold;
+    margin-right: 10px;
+    color: black;
+
+}
+.edit{
+    background-color: lightgray;
+    box-shadow: 0 2px gray ;
+}
+.edit:hover{
+    background-color: dimgray;
+}
+.done{
+    background-color: forestgreen;
+    box-shadow: 0 2px #013d01;
+}
+.done:hover{
+    background-color: darkgreen;
+}

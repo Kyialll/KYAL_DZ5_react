@@ -1,57 +1,18 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import classes  from "../TodoList/TodoList.module.css"
 import Modal from "../../components/Modal/Modal";
 import List from "../../components/List/List";
 
-
-
-
-
 const TodoList=()=>{
     const [ isShow, setIsShow ] = useState(false);
     const [ newTitle, setNewTitle ] = useState('');
     const[search,setSearch]=useState('');
     const [currentEdit,setCurrentEdit]=useState('');
+    const [todoList,setTodoList]=useState([])
+    const [select,setSelect]=useState('all')
 
-
-
-    const [list,setList]=useState([ {
-        title: 'coding',
-        id:1 ,
-        completed:false,
-
-    },
-        {
-            title: 'homework',
-            id:2,
-            completed:false,
-
-        },
-        {
-            title:'read',
-            id:3,
-            completed:false,
-
-        },
-        {
-            title: 'sleep',
-            id:4,
-            completed:false,
-
-        },
-        {
-            title: 'cook',
-            id:5,
-            completed:false,
-
-        }
-        ])
-    localStorage.setItem('list', JSON.stringify(list));
-
-    const storedList = JSON.parse(localStorage.getItem('list'));
-    console.log(storedList)
 
 
 
@@ -61,55 +22,85 @@ const TodoList=()=>{
         setNewTitle('')
     };
     const handleAdd=()=>{
-        setList((prevTodo)=>{
-            return [...prevTodo,{id:list.length +1,title:newTitle,completed:false}]
+        setTodoList((prevTodo)=>{
+            return [...prevTodo,{id:todoList.length +1,title:newTitle,completed:false}]
         })
+        setNewTitle('')
         handleShow()
-
-
     }
+
 
     const handleDone = (id) => {
-        const currentIndex = list.findIndex((todo) => todo.id === id);
-        list[currentIndex].completed = !list[currentIndex].completed;
-        setList([...list]);
+        const currentIndex = todoList.findIndex((todo) => todo.id === id);
+        todoList[currentIndex].completed = !todoList[currentIndex].completed;
+        setTodoList([... todoList]);
     }
+
+
+
     const handleChangeText = (event) => {
         setNewTitle(event.target.value);
-        // setAdd(event.target.value)
     }
+
+
     const handeSearch=(event)=>{
         setSearch(event.target.value)
     }
-    console.log(list)
+
+
     const handleDelete = (id) =>
     {
-        let newList = list.filter(todo => todo.id !== id)
-        setList(newList)
+        const filtered = todoList.filter(todo => todo.id !== id)
+        setTodoList([...filtered])
     }
 
     const handleEdit=(editTodo)=>{
-        const editList=list.map(todo=>{
+        const editList=todoList.map(todo=>{
             if (editTodo.id===todo.id){
                 return{...todo,title:editTodo.title}
             }
             return todo
         })
-        setList([...editList]);
+
+        setTodoList([...editList]);
         setCurrentEdit()
     }
-    // const handleCancel=(cancelTodo)=>{
-    //     const cancelList=list.map(todo=>{
-    //         if (cancelTodo.id===todo.id){
-    //             return{...todo,title:cancelTodo.title}
-    //         }
-    //         return todo
-    //     })
-    //     setList([...cancelList]);
-    //
-    //
-    // }
 
+    const resultSearch = todoList.filter(todo => todo.title.toLowerCase().includes(search.toLowerCase()));
+    const resultFilter = select ==='all'
+        ? resultSearch : select ==='completed'
+        ? resultSearch.filter(todo=>todo.completed) : select=== 'notCompleted'
+        ? resultSearch.filter(todo=> !todo.completed) : null
+
+
+
+    useEffect(() => {
+        console.log('render1');
+        const myLocalList = JSON.parse(localStorage.getItem('todoList'));
+        if(myLocalList?.length !== 0) {
+            setTodoList(myLocalList);
+        }
+
+    },[])
+
+
+    useEffect(() => {
+        console.log('render 2');
+        localStorage.setItem('todoList', JSON.stringify(todoList)) // запись
+        return () => {
+
+        }
+    }, [todoList])
+
+
+
+    const handleSelect=(event)=>{
+        setSelect(event.target.value)
+    }
+    const clearTasks=()=>{
+        localStorage.clear()
+        setTodoList([])
+    }
 
 
 
@@ -117,7 +108,16 @@ const TodoList=()=>{
 
     return (
         <div className={classes.wrapper}>
-            <Button onClick={handleShow}>
+            <select onChange={handleSelect}
+            className={classes.select}>
+                <option value={'all'}>Все</option>
+                <option value={'completed'}>Выполненные</option>
+                <option value={'notCompleted'}>Невыполненные</option>
+            </select>
+
+
+            <Button onClick={handleShow}
+            className={classes.addButton}>
                 Добавить
             </Button>
             <Input
@@ -138,28 +138,28 @@ const TodoList=()=>{
                 onChange={handleChangeText}
                 name={'add'}
                 value={newTitle}/>
-                <Button onClick={handleAdd}>
+                <Button onClick={handleAdd}
+                className={classes.addButton}>
                     Добавить
                 </Button>
-
-
                 <p>{search}</p>
-                <button  className={classes.button} onClick={handleShow}>Close</button>
+
             </Modal> }
-            <List list={list}
+            <List list={resultFilter}
                   handleDone={handleDone}
                   search={search}
                   handleDelete={handleDelete}
                   currentEdit={currentEdit}
                   handleChangeCurrent={setCurrentEdit}
                   handleEdit={handleEdit}
-
-
-
-
             />
 
+            <Button
+                onClick={clearTasks}
+                className={classes.clearButton}
+            >Очистить все</Button>
         </div>
+
 
     )
 }

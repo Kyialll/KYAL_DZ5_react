@@ -2,14 +2,14 @@ import classes from  '../TodoCard/TodoCard.module.css'
 import {useState} from "react";
 import Delete from "../Delete/Delete";
 import trashIcon from '../../assets/trash-solid.svg';
-import Edit from "../Edit/Edit";
+import ButtonAction from "../ButtonAction/ButtonAction";
 import Input from "../Input/Input";
 
 
 
 
-const TodoCard=({todo,handleDelete,currentEdit,handleChangeCurrent,handleEdit})=>{
-    const [check,setCheck]=useState(false)
+const TodoCard=({todo,handleDelete,currentEdit,handleChangeCurrent,handleEdit,handleDone,handleSearch})=>{
+    // const [check,setCheck]=useState(false)
     const[newTitle,setNewTitle]=useState(todo.title)
     const handleSetTitle=(event)=>{
         setNewTitle(event.target.value)
@@ -54,20 +54,21 @@ const TodoCard=({todo,handleDelete,currentEdit,handleChangeCurrent,handleEdit})=
 
     return(
         <div className={classes.wrapperTodoCard}>
-            <div className={check ?    classes['todoCard'] + " " + classes.done : classes.todoCard }>
+            <div className={todo.completed ?    classes['todoCard'] + " " + classes.done : classes.todoCard }>
                 <h3 >{todo.title}</h3>
+                <div className={classes.actionButton}>
+                <ButtonAction handleClick={handleChangeCurrent}
+                              todo={todo}
+                              type={'edit'}>Edit</ButtonAction>
 
-                <Edit handleClick={handleChangeCurrent}
-                      todo={todo}
-
-                >Edit</Edit>
-
-                <input checked={check} onChange={()=>setCheck(!check)} type={'checkbox'} className={classes.checkbox}></input>
+                 <ButtonAction handleClick={handleDone}
+                               todo={todo}
+                                type={'done'}>Done</ButtonAction>
+                </div>
             </div>
             <Delete onClick={handleDelete} id={todo.id}>
                 <img src={trashIcon} className={classes.trashIcon} alt={'trash icon'}/>
             </Delete>
-            {/*<Button onClick={handleDone} id={todo.id}>Done</Button>*/}
 
         </div>
 
